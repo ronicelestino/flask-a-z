@@ -2,3 +2,5 @@ Flask>=1.1.1<=2.0
 mysqlclient
 Flask-MySQLdb
 Flask-SQLAlchemy
+Flask-Migrate
+Flask-Script
