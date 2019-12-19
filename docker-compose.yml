@@ -1,24 +1,79 @@
 version: "3"
 
-services: 
+services:
   app:
     build:
       context: .
     container_name: flask_a_z
     ports:
+      - "8000:8000"
       - "5000:5000"
     volumes:
       - ./app:/app
     environment:
       - FLASK_ENV=development
+      - DB_HOST=${DB_HOST:-mysql}
+      - DB_NAME=${DB_NAME:-mysql}
+      - DB_USER=${DB_USER:-mysql}
+      - DB_PASS=${DB_PASSWORD:-changeme}
     command: >
-       sh -c "python run.py"
+      sh -c "python run.py"
+    networks:
+      - mysql
+    depends_on:
+      - mysql
 
-      
-  # db:
-  #   image: postgres:10
-  #   environment:
-  #     - POSTGRES_DB=app
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=supersecretpassword
+    
+  mysql:    
+      image: mysql
+      container_name: mysql
+      command: --default-authentication-plugin=mysql_native_password
+      environment:
+        MYSQL_DATABASE: ${MYSQL_DATABASE:-mysql}
+        MYSQL_USER: ${MYSQL_USER:-mysql}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD:-changeme}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeme}
+      volumes:
+        - ./volumes/mysql:/var/lib/mysql
+      ports:
+        - "3306:3306"
+      networks:
+        - mysql
+      restart: unless-stopped
 
+
+ # postgres:    
+ #   image: postgres:11.1
+ #   container_name: postgres
+ #   environment:
+ #     POSTGRES_DB: ${POSTGRES_DB:-postgres}
+ #     POSTGRES_USER: ${POSTGRES_USER:-postgres}
+ #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+ #   volumes:
+ #     - ./volumes/postgres:/var/lib/postgresql/data
+ #   ports:
+ #     - "5432:5432"
+ #   networks:
+ #     - postgres
+ #   restart: unless-stopped
+
+  adminer:    
+    image: adminer
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - mysql
+    depends_on:
+      - mysql
+
+networks:
+  mysql:
+    driver: bridge
+
+volumes:
+  mysql:
+  adminer:
