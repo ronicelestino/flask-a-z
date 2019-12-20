@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func, desc, asc, distinct, and_, or_
+from sqlalchemy.orm import relationship
 from config import app_active, app_config
-from model.User import User
-from model.Category import 
+from model.user import User
+from model.category import Category
 
 config = app_config[app_active]
 db = SQLAlchemy(config.APP)
+
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,3 +24,5 @@ class Product(db.Model):
     category = db.Column(db.Integer, db.ForeignKey(Category.id), nullable=False)  
     # usuario = relationship(User)  
     # categoria = relationship(Category)
+
+

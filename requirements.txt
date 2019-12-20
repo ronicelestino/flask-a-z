@@ -4,3 +4,5 @@ Flask-MySQLdb
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-Script
+Flask-Admin
+passlib[bcrypt]
