@@ -22,7 +22,7 @@ class Product(db.Model):
     status = db.Column(db.Integer, default=1, nullable=True)
     user_created = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     category = db.Column(db.Integer, db.ForeignKey(Category.id), nullable=False)  
-    # usuario = relationship(User)  
-    # categoria = relationship(Category)
+    usuario = relationship(User)  
+    categoria = relationship(Category)
 
 
