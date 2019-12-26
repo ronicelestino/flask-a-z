@@ -2,6 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from config import app_config, app_active
+from sqlalchemy.orm import relationship
 from model.role import Role
 from passlib.hash import pbkdf2_sha256
 
@@ -22,6 +23,7 @@ class User(db.Model):
     recovery_code = db.Column(db.String(200), nullable=True)
     active = db.Column(db.Boolean(), default=1, nullable=True)
     role = db.Column(db.Integer, db.ForeignKey(Role.id), nullable=False)
+    funcao = relationship(Role)
 
     def __repr__(self):
         return '%s - %s' % (self.id, self.username)
