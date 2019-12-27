@@ -26,3 +26,33 @@ class Product(db.Model):
     categoria = relationship(Category)
 
 
+    def get_all():
+        try:
+            res = db.session.query(Product).all()
+        except Exception as e:
+            res = []
+            print(e)
+        finally:
+            db.session.close()
+            return res
+
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return True
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            return False
+    
+    def update(self, obj):
+        try:
+            res = db.session.query(Product).filter(Product.id == self.id).update(obj)
+            db.session.commit()
+            return True
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            return False     
+

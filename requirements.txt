@@ -5,4 +5,5 @@ Flask-SQLAlchemy
 Flask-Migrate
 Flask-Script
 Flask-Admin
+Flask-Bootstrap
 passlib[bcrypt]

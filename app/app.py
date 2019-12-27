@@ -3,8 +3,10 @@ from flask import Flask, request, redirect, render_template
 from config import app_config, app_active
 from admin.admin import start_views
 from controller.user import UserController
+from controller.product import ProductController
 config = app_config[app_active]
 from flask_sqlalchemy import SQLAlchemy
+from flask_bootstrap import Bootstrap
 
 def create_app(config_name):
     app = Flask(__name__, template_folder='templates')
@@ -13,8 +15,10 @@ def create_app(config_name):
     app.config.from_pyfile('config.py')
     app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['FLASK_ADMIN_SWATCH'] = 'paper'
     db = SQLAlchemy(config.APP)
     start_views(app, db)
+    Bootstrap(app)
     db.init_app(app)
 
     @app.route('/')
@@ -23,7 +27,7 @@ def create_app(config_name):
 
     @app.route('/login/')
     def login():
-        return 'Aqui entrara a tela de login'
+        return render_template('login.html')
 
     @app.route('/login/', methods=['POST'])
     def login_post():
@@ -47,6 +51,35 @@ def create_app(config_name):
         result = user.recovery(request.form['email'])
         if result:
             return render_template('recovery.html', data={'status': 200, 'msg': 'Erro ao enviar e-mail de recuperação'})
+
+    
+    @app.route('/product', methods=['POST'])
+    def save_products():
+        product = ProductController()
+        result = product.save_product(request.form)
+
+        if result:
+            message = "Inserido"
+        else:
+            message = "Não inserido"
+
+        return message
+    return app
+
+    @app.route('/product', methods=['PUT'])
+    def update_products():
+        product = ProductController()
+
+        result = product.update_product(request.form)
+
+        if result:
+            message = "Editado"
+        else:
+            message = "Não Editado"
+
+        return message
+    return app
+
 
     @app.route('/profile/<int:id>/action/<action>/')
     def profile(id, action):
