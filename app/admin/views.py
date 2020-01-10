@@ -2,14 +2,27 @@
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import AdminIndexView, expose
 from config import app_config, app_active
+from model.user import User
+from model.category import Category
+from model.product import Product
 config = app_config[app_active]
 
 
 class HomeView(AdminIndexView):
     @expose('/')
     def index(self):
+        user_model = User()
+        category_model = Category()
+        product_model = Product()
+
+        users = user_model.get_total_users()
+        categories = category_model.get_total_categories()
+        product = product_model.get_total_products()
+
         return self.render('home_admin.html', data={
-            'username': 'Roni Celestino'
+            'users': 0 if not users else users[0]
+            'categories': 0 if not categories else categories[0]
+            'products': 0 if not products else products[0]
         })
 
 

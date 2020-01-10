@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
+from flask_bootstrap import Bootstrap
+from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, redirect, render_template
 from config import app_config, app_active
 from admin.admin import start_views
 from controller.user import UserController
 from controller.product import ProductController
 config = app_config[app_active]
-from flask_sqlalchemy import SQLAlchemy
-from flask_bootstrap import Bootstrap
+
 
 def create_app(config_name):
     app = Flask(__name__, template_folder='templates')
@@ -27,7 +28,7 @@ def create_app(config_name):
 
     @app.route('/login/')
     def login():
-        return render_template('login.html')
+        return render_template('login.html', message="Essa é uma mensagemque veio da rota")
 
     @app.route('/login/', methods=['POST'])
     def login_post():
@@ -39,7 +40,11 @@ def create_app(config_name):
         if result:
             return redirect('/admin')
         else:
-            return render_template('login.html', data={'status': 401, 'msg': 'Dados de usuário incorreto', 'type': None})
+            return render_template('login.html', data={
+                'status': 401,
+                'msg': 'Dados de usuário incorreto',
+                'type': None
+            })
 
     @app.route('/recovery-password/')
     def recovery_password():
@@ -50,9 +55,11 @@ def create_app(config_name):
         user = UserController()
         result = user.recovery(request.form['email'])
         if result:
-            return render_template('recovery.html', data={'status': 200, 'msg': 'Erro ao enviar e-mail de recuperação'})
+            return render_template('recovery.html', data={
+                'status': 200,
+                'msg': 'Erro ao enviar e-mail de recuperação'
+            })
 
-    
     @app.route('/product', methods=['POST'])
     def save_products():
         product = ProductController()
@@ -80,7 +87,6 @@ def create_app(config_name):
         return message
     return app
 
-
     @app.route('/profile/<int:id>/action/<action>/')
     def profile(id, action):
         if action == 'action1':
@@ -95,13 +101,15 @@ def create_app(config_name):
         username = request.form['username']
         password = request.form['password']
 
-        return 'Essa rota possui um método POST e criará um usuário com os dados de usuário %s e senha %s' % (username, password)
+        return 'Essa rota possui um método POST e criará um usuário com os dados \
+            de usuário %s e senha %s' % (username, password)
 
     @app.route('/profile/<int:id>/', methods=['PUT'])
     def edital_total_profile(id):
         username = request.form['username']
         password = request.form['password']
 
-        return 'Essa rota possui um método PUT e editará o nome do usuário para %s e a senha para %s' % (username, password)
+        return 'Essa rota possui um método PUT e editará o nome do usuário \
+            para %s e a senha para %s' % (username, password)
 
     return app

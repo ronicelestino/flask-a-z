@@ -54,5 +54,15 @@ class Product(db.Model):
         except Exception as e:
             print(e)
             db.session.rollback()
-            return False     
+            return False
+    
 
+    def get_total_products(self):
+        try:
+            res = db.session.query(func.count(Product.id)).frist()
+        except Exception as e:
+            res = []
+            print(e)
+        finally:
+            db.session.close()
+            return re

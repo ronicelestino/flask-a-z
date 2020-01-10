@@ -21,12 +21,10 @@ services:
     networks:
       - mysql
     depends_on:
-      - mysql
-
-    
+      - mysql    
   mysql:    
       image: mysql
-      container_name: mysql
+      container_name: mysql_flask
       command: --default-authentication-plugin=mysql_native_password
       environment:
         MYSQL_DATABASE: ${MYSQL_DATABASE:-mysql}
@@ -59,7 +57,7 @@ services:
 
   adminer:    
     image: adminer
-    container_name: adminer
+    container_name: adminer_flask
     ports:
       - "8080:8080"
     networks:

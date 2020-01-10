@@ -2,5 +2,17 @@
   "files.associations": {
     "*.html": "jinja-html"
   },
-  "python.pythonPath": "/usr/bin/python3",
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "docker-linter.debug": true,
+  "docker-linter.flake8.machine": "",
+  "docker-linter.flake8.enable": true,
+  "docker-linter.flake8.container": "flask_a_z",
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true
 }
