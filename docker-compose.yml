@@ -59,7 +59,7 @@ services:
     image: adminer
     container_name: adminer_flask
     ports:
-      - "8080:8080"
+      - "8081:8081"
     networks:
       - mysql
     restart: unless-stopped

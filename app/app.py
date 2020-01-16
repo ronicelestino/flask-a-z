@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, Response, json
 from config import app_config, app_active
 from admin.admin import start_views
 from controller.user import UserController

@@ -25,10 +25,14 @@ class Product(db.Model):
     usuario = relationship(User)  
     categoria = relationship(Category)
 
-
-    def get_all():
+    def get_all(self, limit):
         try:
-            res = db.session.query(Product).all()
+            if limit is None:
+                res = db.session.query(Product).all()
+            else:
+                res = db.session.query(Product).order_by(
+                    Product.date_created
+                    ).limit(limit).all()
         except Exception as e:
             res = []
             print(e)
@@ -45,24 +49,46 @@ class Product(db.Model):
             print(e)
             db.session.rollback()
             return False
-    
+
     def update(self, obj):
         try:
-            res = db.session.query(Product).filter(Product.id == self.id).update(obj)
+            res = db.session.query(
+                Product).filter(Product.id == self.id).update(obj)
             db.session.commit()
             return True
         except Exception as e:
             print(e)
             db.session.rollback()
             return False
-    
 
     def get_total_products(self):
         try:
-            res = db.session.query(func.count(Product.id)).frist()
+            res = db.session.query(func.count(Product.id)).first()
         except Exception as e:
             res = []
             print(e)
         finally:
             db.session.close()
-            return re
+            return res
+
+    def get_last_products(self):
+        try:
+            res = db.session.query(
+                Product).order_by(Product.date_created).limit(5).all()
+        except Exception as e:
+            res = []
+            print(e)
+        finally:
+            db.session.close()
+            return res
+
+    def get_product_by_id(self):
+        try:
+            res = db.session.query(
+                Product).filter(Product.id == self.id).first()
+        except Exception as e:
+            res = None
+            print(e)
+        finally:
+            db.session.close()
+            return res

@@ -62,10 +62,9 @@ class User(db.Model):
         except ValueError:
             return False
 
-
-    def get_total_user(self):
+    def get_total_users(self):
         try:
-            res = db.session.query(func.count(User.id)).frist()
+            res = db.session.query(func.count(User.id)).first()
         except Exception as e:
             res = []
             print(e)

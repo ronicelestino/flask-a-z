@@ -9,6 +9,7 @@ config = app_config[app_active]
 
 
 class HomeView(AdminIndexView):
+    extra_css = [config.URL_MAIN + 'static/css/home.css','https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css']
     @expose('/')
     def index(self):
         user_model = User()
@@ -17,13 +18,14 @@ class HomeView(AdminIndexView):
 
         users = user_model.get_total_users()
         categories = category_model.get_total_categories()
-        product = product_model.get_total_products()
-
-        return self.render('home_admin.html', data={
-            'users': 0 if not users else users[0]
-            'categories': 0 if not categories else categories[0]
+        products = product_model.get_total_products()
+        last_products = product_model.get_last_products()
+        
+        return self.render('home_admin.html', report={
+            'users': 0 if not users else users[0],
+            'categories': 0 if not categories else categories[0],
             'products': 0 if not products else products[0]
-        })
+        }, last_products=last_products)
 
 
 class UserView(ModelView):
