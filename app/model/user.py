@@ -37,9 +37,20 @@ class User(db.Model):
 
     def get_user_by_id(self):
         """
-        Função 02
+        Função que retorna usuário pelo id
+
+        Keyword arguments:
+        id -- Identificador do usuário
+        Return: Retorna informações do usuário selecionado
         """
-        return ''
+        try:
+            res = db.session.query(User).filter(User.id==self.id).first()
+        except Exception as e:
+            res = None
+            print(e)
+        finally:
+            db.session.close()
+            return res
 
     def update(self, obj):
         """

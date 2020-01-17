@@ -22,6 +22,13 @@ def create_app(config_name):
     Bootstrap(app)
     db.init_app(app)
 
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Controll-Allow-Origin', '*')
+        response.headers.add('Access-Controll-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Controll-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
+        return response
+
     @app.route('/')
     def index():
         return 'Hello World!'
@@ -60,56 +67,36 @@ def create_app(config_name):
                 'msg': 'Erro ao enviar e-mail de recuperação'
             })
 
-    @app.route('/product', methods=['POST'])
-    def save_products():
+
+    @app.route('/products/', methods=['GET'])
+    @app.route('/products/<limit>', methods=['GET'])
+    def get_products(limit=None):
+        header = {}
+
         product = ProductController()
-        result = product.save_product(request.form)
+        response = product.get_products(limit=limit)
+        return Response(
+                json.dumps(response, ensure_ascii=False),
+                mimetype='application/json'), response['status'], header
 
-        if result:
-            message = "Inserido"
-        else:
-            message = "Não inserido"
+    @app.route('/product/<product_id>', methods=['GET'])
+    def get_product(product_id):
+        header = {}
 
-        return message
-    return app
-
-    @app.route('/product', methods=['PUT'])
-    def update_products():
         product = ProductController()
+        response = product.get_product_by_id(product_id=product_id)
 
-        result = product.update_product(request.form)
+        return Response(
+            json.dumps(response, ensure_ascii=False),
+            mimetype='application/json'), response['status'], header
 
-        if result:
-            message = "Editado"
-        else:
-            message = "Não Editado"
+    @app.route('/user/<user_id>', methods=['GET'])
+    def get_user_profile(user_id):
+        header = {}
 
-        return message
-    return app
+        user = UserController()
+        response = user.get_user_by_id(user_id=user_id)
 
-    @app.route('/profile/<int:id>/action/<action>/')
-    def profile(id, action):
-        if action == 'action1':
-            return 'Ação action1 usuário de ID %d' % id
-        elif action == 'action2':
-            return 'Ação action2 usuário de ID %d' % id
-        elif action == 'action3':
-            return 'Ação action3 usuário de ID %d' % id
-
-    @app.route('/profile/', methods=['POST'])
-    def create_profile():
-        username = request.form['username']
-        password = request.form['password']
-
-        return 'Essa rota possui um método POST e criará um usuário com os dados \
-            de usuário %s e senha %s' % (username, password)
-
-    @app.route('/profile/<int:id>/', methods=['PUT'])
-    def edital_total_profile(id):
-        username = request.form['username']
-        password = request.form['password']
-
-        return 'Essa rota possui um método PUT e editará o nome do usuário \
-            para %s e a senha para %s' % (username, password)
+        return Response(json.dumps(response, ensure_ascii=False), mimetype='application/json'), response['status'], header
 
     return app
