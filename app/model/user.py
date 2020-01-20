@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from config import app_config, app_active
 from sqlalchemy.orm import relationship
@@ -12,7 +12,7 @@ config = app_config[app_active]
 db = SQLAlchemy(config.APP)
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -31,9 +31,19 @@ class User(db.Model):
 
     def get_user_by_email(self):
         """
-        Função 01
+        Função que faz uma busca de usuários filtrando pelo email     
+        Keyword arguments:
+        email -- email cadastrado para o usuário
+        Return: Usuário filtrado de acordo com o eamil informado
         """
-        return ''
+        try:
+            res = db.session.query(User).filter(User.email==self.email).first()
+        except Exception as e:
+            res = None
+            print(e)
+        finally:
+            db.session.close()
+            return res
 
     def get_user_by_id(self):
         """

@@ -6,5 +6,7 @@ Flask-Migrate
 Flask-Script
 Flask-Admin
 Flask-Bootstrap
+Flask_login
 flake8
+pyjwt
 passlib[bcrypt]
