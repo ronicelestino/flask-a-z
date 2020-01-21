@@ -32,13 +32,13 @@ class ProductController():
                 'result': result,
                 'status': status
             }
-        
-    def get_product_by_id(self, product_id):    
+
+    def get_product_by_id(self, product_id):
         result = {}
         try:
             self.product_model.id = product_id
             res = self.product_model.get_product_by_id()
-            
+
             result = {
                 'id': res.id,
                 'name': res.name,
